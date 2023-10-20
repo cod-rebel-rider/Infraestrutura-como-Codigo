@@ -1,19 +1,24 @@
 #!/bin/bash
+
+#contador vai servir para contar o resultados positivos nas condicionais
+#em seguida vou usar ele para realizar o tratamento, se o contador for igual a 0 significa que não foi encontrado resultados com base nos parametros informados.
+#contador deve sempre começar com zero
 contador=0
-#Vamos começar limpando os grupos, usuários e diretórios do servidor
 
 echo "=================Verificando Grupos==================="
 for group in $(awk -F: '{if ($3 >= 1000) print $1}' /etc/group); do
-  if [ "$group" != "root" ]; then
+  if [ "$group" != "root" ] && [ "$group" != "matheus" ]; then
+  #fazendo incremento de 1 para cada vez que 
   contador+=1
     echo "Grupos $group encontrado! "
 #    groupdel "$group"
   fi
-  if [ "$contador" = 0]; then
-    echo "Com base nos parametros informados não foram encontrados usuários disponiveis para exclusão! "
-  fi
-
 done
+
+if [ "$contador" = 0 ]; then
+    echo "Com base nos parametros informados não foram encontrados usuários disponiveis para exclusão! "
+fi
+
 contador=0
 echo "================Verificando Usuários===================="
 
@@ -31,12 +36,11 @@ for user in $(awk -F: '{if ($3 >= 1000) print $1}' /etc/passwd); do
 #    else
 #      echo "Falha ao excluir o usuário $user: $result"
   fi
-
-  if [ "$contador" = 0]; then
-    echo "Com base nos parametros informados não foram encontrados usuários disponiveis para exclusão! "
-  fi
-
 done
+
+if [ "$contador" = 0 ]; then
+    echo "Com base nos parametros informados não foram encontrados usuários disponiveis para exclusão! "
+fi
 
 contador=0
 echo "===============Verificando Diretorios====================="
@@ -49,9 +53,8 @@ for dir in /home/*; do
     echo "Diretório $dir encontrado! "
 #    rm -rf "$dir""
   fi
-
-  if [ "$contador" = 0]; then
-    echo "Com base nos parametros informados não foram encontrados diretórios disponiveis para exclusão! "
-  fi
-
 done
+
+if [ "$contador" = 0 ]; then
+    echo "Com base nos parametros informados não foram encontrados diretórios disponiveis para exclusão! "
+fi

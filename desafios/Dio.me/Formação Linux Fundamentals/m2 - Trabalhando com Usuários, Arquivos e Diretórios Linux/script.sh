@@ -78,6 +78,64 @@ echo -e "\n"
 
 #Criação
 
+# Criar Diretórios
+
+#1º Diretório
+if [[ -d "/home/adm" ]]; then
+  echo "O diretório /home/adm existe."
+else
+  echo "O diretório /home/adm não existe."
+  echo "Criando diretório... "
+  result=$(sudo mkdir -m 770 /home/adm 2>&1)
+    if [ $? -eq 0 ]; then
+      echo "Diretório /adm foi criado com sucesso."
+    else
+      echo "Falha ao criar /adm: $result "
+    fi
+fi
+
+#2º Diretório
+if [[ -d "/home/ven" ]]; then
+  echo "O diretório /home/ven existe."
+else
+  echo "O diretório /home/ven não existe."
+  echo "Criando diretório... "
+  result=$(sudo mkdir -m 770 /home/ven 2>&1)
+    if [ $? -eq 0 ]; then
+      echo "Diretório /ven foi criado com sucesso."
+    else
+      echo "Falha ao criar /ven: $result "
+    fi
+fi
+
+#3º Diretório
+if [[ -d "/home/sec" ]]; then
+  echo "O diretório /home/sec existe."
+else
+  echo "O diretório /home/sec não existe."
+  echo "Criando diretório... "
+  result=$(sudo mkdir -m 770 /home/sec 2>&1)
+    if [ $? -eq 0 ]; then
+      echo "Diretório /sec foi criado com sucesso."
+    else
+      echo "Falha ao criar /sec: $result "
+    fi
+fi
+
+#4º Diretório
+if [[ -d "/home/publico" ]]; then
+  echo "O diretório /home/publico existe."
+else
+  echo "O diretório /home/publico não existe."
+  echo "Criando diretório... "
+  result=$(sudo mkdir -m 707 /home/publico 2>&1)
+    if [ $? -eq 0 ]; then
+      echo "Diretório /publico foi criado com sucesso."
+    else
+      echo "Falha ao criar /publico: $result "
+    fi
+fi
+
 # Criar grupos
 
 #1º Grupo

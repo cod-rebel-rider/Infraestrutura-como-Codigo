@@ -107,6 +107,27 @@ if [ "$contador" = 0 ]; then
 fi
 ```
 ### 2- Criação dos Diretórios
+Pode ser redundante, mas optei por faz uma verificação se os diretórios que vou criar existem ou não.
+
+Usei IF para verificar se o diretório /home/adm existe. A flag -d é para verificar se o caminho especificado a seguir é de um diretório.
+
+Se o diretório existir, o script exibirá a mensagem "O diretório existe."
+
+Se o diretório não existir, o script entrará na cláusula else. Isso significa que o diretório não existe e precisa ser criado.
+
+Em seguida, é usado o comando mkdir. O -m seguido por 3 numeros define as permissões do diretório.
+
+As permissões para o diretório ficaram definidas desse jeito:
+
+| Diretórios  | -m  | Descrição                                                               |
+|-------------|-----|-------------------------------------------------------------------------|
+| /publico    | 707 | Proprietários e usuários têm permissões de leitura, gravação e execução |
+| /adm        | 770 | Proprietário e grupo têm permissões de leitura, gravação e execução     |
+| /ven        | 770 | Proprietário e grupo têm permissões de leitura, gravação e execução     |
+| /sec        | 770 | Proprietário e grupo têm permissões de leitura, gravação e execução     |
+
+
+A saída do comando também é armazenada na variável result para que seja verificado se o comando foi concluido com sucesso.
 
 ### 3- Exclusão incial
 

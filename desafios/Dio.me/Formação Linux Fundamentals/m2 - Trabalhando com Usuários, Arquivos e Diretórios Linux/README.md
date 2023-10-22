@@ -126,8 +126,23 @@ As permissões para o diretório ficaram definidas desse jeito:
 | /ven        | 770 | Proprietário e grupo têm permissões de leitura, gravação e execução     |
 | /sec        | 770 | Proprietário e grupo têm permissões de leitura, gravação e execução     |
 
-
 A saída do comando também é armazenada na variável result para que seja verificado se o comando foi concluido com sucesso.
+
+No final o código ficou assim:
+```
+if [[ -d "/home/publico" ]]; then
+  echo "O diretório /home/publico existe."
+else
+  echo "O diretório /home/publico não existe."
+  echo "Criando diretório... "
+  result=$(mkdir -m 707 /home/publico 2>&1)
+    if [ $? -eq 0 ]; then
+      echo "Diretório /publico foi criado com sucesso."
+    else
+      echo "Falha ao criar /publico: $result "
+    fi
+fi
+```
 
 ### 3- Exclusão incial
 

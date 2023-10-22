@@ -28,23 +28,21 @@
 
 ## Explicando Meu Código
 
-Meu script foi testando em uma maquina virtual usando Debian. Essa maquina já possui um usuário padrão com certos privilégios, então pricisei adaptar meu código para que ele não veizesse alterações no nessa extrutura, mas qualquer outra coisa ele iria remover e contriur a nova extrutura conforme orientado na descrição desse desafio.
+Meu script foi testado em uma máquina virtual __Debian__. A máquina virtual já possuía um usuário padrão com certos privilégios, então adaptei o código para não afetar essa estrutura. Qualquer outra coisa no sistema foi removida e uma nova estrutura foi criada, conforme descrito neste desafio.
 
 ### 1- Exclusão incial
 
-Nas 3 fases dessa exclusão fiz o uso de um for para ter um laço de repetição que pudesse executar a exclusão de todos os itens de uma "lista".
+Nas três fases de exclusão, utilizei um loop __for__ para repetir a exclusão de todos os itens em uma lista.
 
-Nas 2 priemiras fases (grupos e usuários) fiz o uso do comando awk para analisar o arquivo /etc/passwd. A parte '{if ($3 >= 1000) print $1}' extrai os nomes de usuário (campo 1) de linhas em que o ID do usuário (campo 3) seja maior ou igual a 1000. Isso é feito para evitar a exclusão dos usuários de sistema, como "root", que geralmente têm IDs menores que 1000.
+Nas duas primeiras fases (grupos e usuários), usei o comando __awk__ para analisar o arquivo __/etc/passwd__. A parte __'{if ($3 >= 1000) print $1}'__ extrai os nomes de usuário __(campo 1)__ das linhas em que o __ID__ do usuário __(campo 3)__ seja maior ou igual a __1000__. Isso evita a exclusão de usuários de sistema, como __"root"__, que geralmente têm IDs menores que 1000.
 
-Para ter certeza que o usuário root ou usuário matheus (usuário que uso para fazer acesso via ssh) iriam ser afetados, usei um if para garantir que o comando de exclusão só iria executar em usuários diferentes dos mencionados.
+Para garantir que o usuário root ou o usuário matheus (usado para acessar via SSH) não fossem afetados, usei uma instrução __if__ para garantir que o comando de exclusão só fosse executado em usuários diferentes dos mencionados.
 
-Usei o comando userdel -r para excluir o usuário e groupdel para excluir o grupo. O -r indica que o diretório home do usuário deve ser removido juntamente com o usuário. A saída dos comandos é armazenada na variável result para ser verificada em seguida.
+Usei o comando __userdel -r__ para excluir o usuário e __groupdel__ para excluir o grupo. O __"-r"__ indica que o diretório home do usuário deve ser removido junto com o usuário. A saída dos comandos é armazenada na variável __result__ para verificação posterior.
 
-Procurando ter o controle de tudo que esta acontecendo foi pensado em uma verificação para garantir que a exclusão foi bem-sucedida, verificando o código de saída do comando com if [ $? -eq 0 ], onde qualquer código diferente de zero significa o comadno anterior terminou com erro.
+Para manter o controle do processo, adicionei um __contador__ que é __incrementado__ toda vez que a condição do __if__ é verdadeira. No final do código, é verificado se o contador é igual a zero. Se for igual a zero, significa que o __if__ responsável pela exclusão do grupo ou usuário não foi acionado nenhuma vez, o que indica que nenhum usuário ou grupo estava disponível para exclusão.
 
-Dentro do if foi adicionado um contador que faz um autoincremento toda vez que a condição do if for verdadeira. No final do código ele verifica se essa contador é igual a zero, se verdadeira significa que o IF responsável por iniciar a exclusão do grupo ou usuário não aconteseu nenhuma vez, logo ele não encontrou nenhum usuário ou grupo disponivel para ser excluido.
-
-No final o código ficou assim:
+__O código final é o seguinte:__
 ```
 for user in $(awk -F: '{if ($3 >= 1000) print $1}' /etc/passwd); do
 
@@ -67,23 +65,13 @@ if [ "$contador" = 0 ]; then
     echo -e "\n Com base nos parametros informados não foram encontrados usuários disponiveis para exclusão! "
 fi
 ```
-Essa é a estrura para exclusão de usuários e grupos.
+__Observação:__ Durante os testes, para evitar a exclusão acidental de alguns usuários ou grupos do sistema, eles foram adicionados às condicionais como solução __temporária__.
 
-Obs.: Durante os testes apenas para que o script.sh retorna-se o os objetos encontrados pelo awk, alguns usuários/grupos do sistema continuaram aparecendo, então foram adicionados nas condicionais como solução temporária.
+Para a terceira fase, que envolve a exclusão de diretórios, a estrutura é mais simples. Usei um loop para percorrer todos os diretórios localizados em __/home__. As verificações antes da exclusão seguem os mesmos princípios das fases anteriores.
 
-Para a 3 fase, exclusão dos diretórios a estrutura foi mais simples.
+Utilizei o comando __rm -rf__ para excluir o diretório encontrado. O __rm é__ um comando para remover arquivos e diretórios, o __-r__ indica que a exclusão deve ser recursiva (para remover diretórios e seu conteúdo) e o __-f__ força a exclusão sem solicitar confirmação. A saída do comando também é armazenada na variável __result__ para verificação.
 
-Usei um loop para percorrer todos os diretórios localizados em /home.
-
-As verificações antes de iniciar a exclusão seguem as mesmas das fases anteriores.
-
-Usei o rm -rf para excluir o diretório encontrado. O rm é um comando para remover arquivos e diretórios, o -r indica que a exclusão deve ser recursiva (para remover diretórios e seu conteúdo) e o -f força a exclusão sem solicitar confirmação.
-
-A saída do comando também é armazenada na variável result para que seja verificado se o comando foi concluido com sucesso.
-
-O contador de execuções esta presente nas 3 fases e o objetivo é o mesmo, indicar no final se foram encontrados objetos para serem excluidos.
-
-O Código da 3ª fase ficou assim: 
+__A estrutura final é a seguinte:__
 ```
 for dir in /home/*; do
 
@@ -107,18 +95,12 @@ if [ "$contador" = 0 ]; then
 fi
 ```
 ### 2- Criação dos Diretórios
-Pode ser redundante, mas optei por faz uma verificação se os diretórios que vou criar existem ou não.
 
-Usei IF para verificar se o diretório /home/adm existe. A flag -d é para verificar se o caminho especificado a seguir é de um diretório.
+Para facilitar, optei por verificar se os diretórios que vou criar já existem ou não. Usei um bloco __if__ para verificar se o diretório __/home/publico__ existe, com a flag __-d__ para verificar se o caminho especificado é de um diretório. Se o diretório existir, o script exibirá a mensagem "O diretório existe". Se não existir, o script entrará na cláusula __else__, indicando que o diretório não existe e precisa ser criado.
 
-Se o diretório existir, o script exibirá a mensagem "O diretório existe."
+Em seguida, usei o comando __mkdir__ para criar o diretório. O __-m__ seguido por três números define as __permissões__ do diretório.
 
-Se o diretório não existir, o script entrará na cláusula else. Isso significa que o diretório não existe e precisa ser criado.
-
-Em seguida, é usado o comando mkdir. O -m seguido por 3 numeros define as permissões do diretório.
-
-As permissões para o diretório ficaram definidas desse jeito:
-
+__As permissões foram definidas como:__
 | Diretórios  | -m  | Descrição                                                               |
 |-------------|-----|-------------------------------------------------------------------------|
 | /publico    | 707 | Proprietários e usuários têm permissões de leitura, gravação e execução |
@@ -126,9 +108,9 @@ As permissões para o diretório ficaram definidas desse jeito:
 | /ven        | 770 | Proprietário e grupo têm permissões de leitura, gravação e execução     |
 | /sec        | 770 | Proprietário e grupo têm permissões de leitura, gravação e execução     |
 
-A saída do comando também é armazenada na variável result para que seja verificado se o comando foi concluido com sucesso.
+A saída do comando também é armazenada na variável __result__ para verificação.
 
-No final o código ficou assim:
+__O código final é o seguinte:__
 ```
 if [[ -d "/home/publico" ]]; then
   echo "O diretório /home/publico existe."
@@ -146,27 +128,43 @@ fi
 
 ### 3- Criação dos Grupos
 
-Usei o comando getent para obter informções de grupos. A parte >dev/null 2>&1 redirenciona saidas desse código para "nada", fazendo que não seja exibido nada em tela com resultado dessa consulta, se a saida do comando for positiva significa que o grupo já existe, se não ele vai seguir para a sua criação.
+Utilizei o comando __getent__ para obter informações sobre grupos. A parte __>/dev/null 2>&1__ redireciona as saídas deste comando para a __"nulidade"__, ou seja, suprime a exibição de qualquer saída na tela. Se a saída do comando for positiva, significa que o grupo já existe; caso contrário, ele seguirá para a criação do grupo.
 
-Com o comando groupadd é possivel criar o grupo e, assim como as situações anteriores, o resultado desse comento é armazenada na variável result para ser tratada em seguida.
+O comando __groupadd__ é usado para criar o grupo. Assim como nas situações anteriores, a saída deste comando é armazenada na variável __result__ para tratamento posterior.
 
-Após a criação do grupo, foi necessário usar o comando chown para vincular o grupo recém-criado ao seu diretório.
+Após a criação do grupo, usei o comando __chown__ para vincular o grupo recém-criado ao seu diretório. O script verifica se a vinculação do grupo ao diretório foi bem-sucedida, verificando o código de saída do comando. Se a vinculação for bem-sucedida, o script exibe a mensagem "Grupo foi vinculado ao diretório com sucesso."
 
-O script verifica se a vinculação do grupo ao diretório foi bem-sucedida, verificando o código de saída do comando. Se a vinculação for bem-sucedida, o script exibirá a mensagem "Grupo foi vinculado ao diretório com sucesso."
+__O código final é o seguinte:__
+```
+if getent group GRP_ADM >/dev/null 2>&1; then
+  echo "O grupo GRP_ADM existe."
+else
+  echo "O grupo GRP_ADM não existe. "
+  echo "Criando novo grupo..."
+  result=$(groupadd GRP_ADM 2>&1)
+  if [ $? -eq 0 ]; then
+    echo "Grupo GRP_ADM foi criado com sucesso."
+  else
+    echo "Falha ao criar GRP_ADM: $result "
+  fi
+  result=$(chown :GRP_ADM /home/adm 2>&1)
+  if [ $? -eq 0 ]; then
+    echo "Grupo GRP_ADM foi vinculado ao diretório /adm com sucesso."
+  else
+    echo "Falha ao vincular GRP_ADM a um diretório: $result "
+  fi
+fi
+```
 
 ### 4- Criação dos Usuários
 
-Como existe uma quantidade "alta" de usuários, pra não ter que repetir a mesma estrutura 9 vezes optei por criar 3 arrays para conter os nomes dos usuários em seu respectivo grupo: adm_users, ven_users e sec_users
+Como havia uma quantidade __"alta"__ de usuários e grupos, para evitar a repetição da mesma estrutura nove vezes, optei por criar três __arrays__ para conter os nomes dos __usuários__ em seus respectivos __grupos__: __adm_users, ven_users e sec_users__.
 
-Em seguida, criei um loop for para percorrer pelos nomes de usuários em cada grupo e executar comandos para sua criação.
+Em seguida, criei loops __for__ para percorrer os nomes de usuários em cada grupo e executar comandos para sua criação. Utilizei o __useradd__ para criar um usuário.
 
-Com o useradd é possivel criar um usuário.
+Se o usuário for criado com sucesso, uma mensagem informa que o usuário foi criado com sucesso. Caso contrário, uma mensagem de falha é exibida, incluindo os detalhes do erro contidos em __result__. Para adicionar o usuário recém-criado a um grupo, usei o __usermod -aG__.
 
-Se o usuário for criado com sucesso, uma mensagem informa que o usuário foi criado com sucesso. Caso contrário, uma mensagem de falha é exibida, incluindo os detalhes do erro contidos em result.
-
-Para adicionar o usuário recém criado a um grupo foi utilizado o usermod -aG.
-
-No final o código ficou assim:
+__O código final é o seguinte:__
 ```
 adm_users=("carlos" "maria" "joao")
 ven_users=("debora" "sebastiana" "roberto")
@@ -229,9 +227,9 @@ done
 
 ### 5- Extra
 
-Para facilitar optei por criar arquivo com usuários e senhas onde um compando vai ler e configura a senha a seu respectivo usuário. O objetivo disso é apenas para logar nos usuários e testar se as permissões foram feitas com sucesso.
+Para facilitar, criei um __arquivo__ com usuários e senhas, onde um comando lê e configura a senha para o respectivo usuário. O objetivo disso é apenas permitir o login nos usuários e testar se as permissões foram definidas com sucesso.
 
-senhas.txt
+O arquivo __senhas.txt__ contém os pares usuário-senha:
 ```
 carlos:adm123
 maria:adm123
@@ -244,14 +242,14 @@ amanda:sec123
 rogerio:sec123
 ```
 
-Comando para configurar as senhas:
+__O comando para configurar as senhas é o seguinte:__
 ```
 sudo chpasswd < /home/matheus/senhas.txt
 ```
 
 ## Conclusão
 
-Esse é meu primeiro script de IaC e agora que estou escrevendo essa revisão percebi que existem muitas melhorias que eu posso fazer para otimiza-lo. Desde já agradeco pelo seu interesse em ler até aqui, não esqueca de deixar sua estrelinha no meu repositório e de me seguir no GitHub e nas minhas outras redes sociais.
+Este é meu primeiro script de __Infraestrutura como Código (IaC)__. Durante a revisão, percebi que existem muitas melhorias que posso fazer para otimizá-lo. Agradeço pelo interesse em ler até aqui. Não se esqueça de deixar uma __estrela__ no meu __repositório__ e me seguir no __GitHub__ e nas minhas outras __redes sociais__.
 
 ## Sobre o Bootcamp
 ![Formação Linux Fundamentals](https://hermes.dio.me/tracks/cover/5182e012-d0f3-42b5-aec1-600b8653f498.png)
@@ -259,12 +257,12 @@ Esse é meu primeiro script de IaC e agora que estou escrevendo essa revisão pe
 ### Detalhes da formação
 Aprenda a trabalhar com o principal sistema operacional utilizado em servidores de aplicações, da Instalação ao passo a passo de como gerenciar usuários para ter mais segurança, manipular arquivos de maneira segura e os principais comandos Linux que são essenciais para a sua jornada como desenvolvedor. Veja o poder do Linux de maneira prática e direcionada com os principais temas que um profissional de mercado deve saber.
 
-Atividades:
+__Atividades:__
 - Desafio de Código: Coloque em prática todo o conhecimento adquirido nas aulas e teste o seu conhecimento na resolução de um desafio.
 
 - Desafio de Projeto: Construa o seu portfólio construindo projetos práticos com o conhecimento adquirido ao longo das aulas.
 
-Ferramentas para o seu aprendizado:
+__Ferramentas para o seu aprendizado:__
 - Fórum: Espaço para você interagir e tirar suas dúvidas técnicas com a nossa comunidade.
 
 - Rooms: Espaço para você conversar com outros matriculados no bootcamp e aumentar o seu networking.
@@ -274,5 +272,5 @@ Ferramentas para o seu aprendizado:
 - Certificado: Baixe e compartilhe os certificados de todas as suas conquistas ao longo dessa formação.
 
 
-Clique aqui e saiba mais:
+__Clique aqui e saiba mais:__
 https://bit.ly/dio-me-linux-fundamentals

@@ -77,3 +77,48 @@ fi
 echo -e "\n"
 
 #Criação
+
+# Criar grupos
+
+#1º Grupo
+if getent group GRP_ADM >/dev/null 2>&1; then
+    echo "O grupo GRP_ADM existe."
+else
+    echo "O grupo GRP_ADM não existe. "
+    echo "Criando novo grupo..."
+    result=$(sudo groupadd GRP_ADM 2>&1)
+    if [ $? -eq 0 ]; then
+      echo "Grupo GRP_ADM foi criado com sucesso."
+    else
+      echo "Falha ao criar GRP_ADM: $result "
+    fi
+fi
+
+#2º Grupo
+if getent group GRP_VEN >/dev/null 2>&1; then
+    echo "O grupo GRP_VEN existe."
+else
+    echo "O grupo GRP_VEN não existe. "
+    echo "Criando novo grupo..."
+    result=$(sudo groupadd GRP_VEN 2>&1)
+    if [ $? -eq 0 ]; then
+      echo "Grupo GRP_VEN foi criado com sucesso."
+    else
+      echo "Falha ao criar GRP_VEN: $result "
+    fi
+fi
+
+#3º Grupo
+if getent group GRP_SEC >/dev/null 2>&1; then
+    echo "O grupo GRP_SEC existe."
+else
+    echo "O grupo GRP_SEC não existe. "
+    echo "Criando novo grupo..."
+    result=$(sudo groupadd GRP_SEC 2>&1)
+    if [ $? -eq 0 ]; then
+      echo "Grupo GRP_SEC foi criado com sucesso."
+    else
+      echo "Falha ao criar GRP_SEC: $result "
+    fi
+fi
+

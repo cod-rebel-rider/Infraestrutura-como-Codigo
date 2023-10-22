@@ -154,9 +154,80 @@ Após a criação do grupo, foi necessário usar o comando chown para vincular o
 
 O script verifica se a vinculação do grupo ao diretório foi bem-sucedida, verificando o código de saída do comando. Se a vinculação for bem-sucedida, o script exibirá a mensagem "Grupo foi vinculado ao diretório com sucesso."
 
-### 4- Exclusão incial
+### 4- Criação dos Usuários
 
-### 5- Exclusão incial
+Como existe uma quantidade "alta" de usuários, pra não ter que repetir a mesma estrutura 9 vezes optei por criar 3 arrays para conter os nomes dos usuários em seu respectivo grupo: adm_users, ven_users e sec_users
+
+Em seguida, criei um loop for para percorrer pelos nomes de usuários em cada grupo e executar comandos para sua criação.
+
+Com o useradd é possivel criar um usuário.
+
+Se o usuário for criado com sucesso, uma mensagem informa que o usuário foi criado com sucesso. Caso contrário, uma mensagem de falha é exibida, incluindo os detalhes do erro contidos em result.
+
+Para adicionar o usuário recém criado a um grupo foi utilizado o usermod -aG.
+
+No final o código ficou assim:
+```
+adm_users=("carlos" "maria" "joao")
+ven_users=("debora" "sebastiana" "roberto")
+sec_users=("josefina" "amanda" "rogerio")
+
+#Adm
+for adm_user in "${adm_users[@]}"; do
+  echo "Preparando para criar usuário $adm_user..."
+  result=$(useradd $adm_user 2>&1)
+    if [ $? -eq 0 ]; then
+      echo "Usuário  $adm_user foi criado com sucesso."
+    else
+      echo "Falha ao criar $adm_user: $result "
+    fi
+  echo "Configurando permissões..." 
+  result=$(usermod -aG GRP_ADM $adm_user 2>&1)
+    if [ $? -eq 0 ]; then
+      echo "Usuário foi adicionado ao grupo GRP_ADM com sucesso e as devidas permissões foram concedidas! "
+    else
+      echo "Falha ao adicionar $adm_user: $result "
+    fi
+done
+
+#Ven
+for ven_user in "${ven_users[@]}"; do
+  echo "Preparando para criar usuário $ven_user..."
+  result=$(useradd $ven_user 2>&1)
+    if [ $? -eq 0 ]; then
+      echo "Usuário  $ven_user foi criado com sucesso."
+    else
+      echo "Falha ao criar $ven_user: $result "
+    fi
+  echo "Configurando permissões..."
+  result=$(usermod -aG GRP_VEN $ven_user 2>&1)
+    if [ $? -eq 0 ]; then
+      echo "Usuário foi adicionado ao grupo GRP_VEN com sucesso e as devidas permissões foram concedidas! "
+    else
+      echo "Falha ao adicionar $ven_user: $result "
+    fi
+done
+
+#Sec
+for sec_user in "${sec_users[@]}"; do
+  echo "Preparando para criar usuário $sec_user..."
+  result=$(useradd $sec_user 2>&1)
+    if [ $? -eq 0 ]; then
+      echo "Usuário  $sec_user foi criado com sucesso."
+    else
+      echo "Falha ao criar $sec_user: $result "
+    fi
+  echo "Configurando permissões..."
+  result=$(usermod -aG GRP_SEC $sec_user 2>&1)
+    if [ $? -eq 0 ]; then
+      echo "Usuário foi adicionado ao grupo GRP_SEC com sucesso e as devidas permissões foram concedidas! "
+    else
+      echo "Falha ao adicionar $sec_user: $result "
+    fi
+done
+```
+
+### 5- 
 
 
 

@@ -144,7 +144,15 @@ else
 fi
 ```
 
-### 3- Exclusão incial
+### 3- Criação dos Grupos
+
+Usei o comando getent para obter informções de grupos. A parte >dev/null 2>&1 redirenciona saidas desse código para "nada", fazendo que não seja exibido nada em tela com resultado dessa consulta, se a saida do comando for positiva significa que o grupo já existe, se não ele vai seguir para a sua criação.
+
+Com o comando groupadd é possivel criar o grupo e, assim como as situações anteriores, o resultado desse comento é armazenada na variável result para ser tratada em seguida.
+
+Após a criação do grupo, foi necessário usar o comando chown para vincular o grupo recém-criado ao seu diretório.
+
+O script verifica se a vinculação do grupo ao diretório foi bem-sucedida, verificando o código de saída do comando. Se a vinculação for bem-sucedida, o script exibirá a mensagem "Grupo foi vinculado ao diretório com sucesso."
 
 ### 4- Exclusão incial
 

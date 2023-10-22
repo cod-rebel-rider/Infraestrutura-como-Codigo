@@ -26,18 +26,93 @@
 | /ven        | GRP_VEN     | debora, sebastiana e roberto |
 | /sec        | GRP_SEC     | josefina, amanda e rogerio   |
 
+## Explicando Meu Código
 
+Meu script foi testando em uma maquina virtual usando Debian. Essa maquina já possui um usuário padrão com certos privilégios, então pricisei adaptar meu código para que ele não veizesse alterações no nessa extrutura, mas qualquer outra coisa ele iria remover e contriur a nova extrutura conforme orientado na descrição desse desafio.
 
+### 1- Exclusão incial
 
+Nas 3 fases dessa exclusão fiz o uso de um for para ter um laço de repetição que pudesse executar a exclusão de todos os itens de uma "lista".
 
+Nas 2 priemiras fases (grupos e usuários) fiz o uso do comando awk para analisar o arquivo /etc/passwd. A parte '{if ($3 >= 1000) print $1}' extrai os nomes de usuário (campo 1) de linhas em que o ID do usuário (campo 3) seja maior ou igual a 1000. Isso é feito para evitar a exclusão dos usuários de sistema, como "root", que geralmente têm IDs menores que 1000.
 
+Para ter certeza que o usuário root ou usuário matheus (usuário que uso para fazer acesso via ssh) iriam ser afetados, usei um if para garantir que o comando de exclusão só iria executar em usuários diferentes dos mencionados.
 
+Usei o comando userdel -r para excluir o usuário e groupdel para excluir o grupo. O -r indica que o diretório home do usuário deve ser removido juntamente com o usuário. A saída dos comandos é armazenada na variável result para ser verificada em seguida.
 
+Procurando ter o controle de tudo que esta acontecendo foi pensado em uma verificação para garantir que a exclusão foi bem-sucedida, verificando o código de saída do comando com if [ $? -eq 0 ], onde qualquer código diferente de zero significa o comadno anterior terminou com erro.
 
+Dentro do if foi adicionado um contador que faz um autoincremento toda vez que a condição do if for verdadeira. No final do código ele verifica se essa contador é igual a zero, se verdadeira significa que o IF responsável por iniciar a exclusão do grupo ou usuário não aconteseu nenhuma vez, logo ele não encontrou nenhum usuário ou grupo disponivel para ser excluido.
 
+No final o código ficou assim:
+```
+for user in $(awk -F: '{if ($3 >= 1000) print $1}' /etc/passwd); do
 
+  if [ "$user" != "root" ] && [ "$user" != "matheus" ] && [ "$user" != "nobody" ]; then 
+    contador+=1
+    echo "Usuário $user encontrado! "
 
+    result=$(userdel -r "$user" 2>&1)
+    if [ $? -eq 0 ]; then
+      echo "Usuário $user foi excluído com sucesso. "
+    else
+      echo "Falha ao excluir o usuário $user: $result "
+    fi
 
+  fi
+
+done
+
+if [ "$contador" = 0 ]; then
+    echo -e "\n Com base nos parametros informados não foram encontrados usuários disponiveis para exclusão! "
+fi
+```
+Essa é a estrura para exclusão de usuários e grupos.
+
+Obs.: Durante os testes apenas para que o script.sh retorna-se o os objetos encontrados pelo awk, alguns usuários/grupos do sistema continuaram aparecendo, então foram adicionados nas condicionais como solução temporária.
+
+Para a 3 fase, exclusão dos diretórios a estrutura foi mais simples.
+
+Usei um loop para percorrer todos os diretórios localizados em /home.
+
+As verificações antes de iniciar a exclusão seguem as mesmas das fases anteriores.
+
+Usei o rm -rf para excluir o diretório encontrado. O rm é um comando para remover arquivos e diretórios, o -r indica que a exclusão deve ser recursiva (para remover diretórios e seu conteúdo) e o -f força a exclusão sem solicitar confirmação.
+
+A saída do comando também é armazenada na variável result para que seja verificado se o comando foi concluido com sucesso.
+
+O contador de execuções esta presente nas 3 fases e o objetivo é o mesmo, indicar no final se foram encontrados objetos para serem excluidos.
+
+O Código da 3ª fase ficou assim: 
+```
+for dir in /home/*; do
+
+ if [ "$dir" != "/home/root" ] && [ "$dir" != "/home/matheus" ]; then
+    contador+=1
+    echo "Diretório $dir encontrado! "
+
+    result=$(rm -rf "$dir" 2>&1)
+    if [ $? -eq 0 ]; then
+      echo "Diretório $dir foi excluído com sucesso."
+    else
+      echo "Falha ao excluir o Diretório $dir: $result "
+    fi
+
+  fi
+
+done
+
+if [ "$contador" = 0 ]; then
+    echo -e "\n Com base nos parametros informados não foram encontrados diretórios disponiveis para exclusão! "
+fi
+```
+### 2- Criação dos Diretórios
+
+### 3- Exclusão incial
+
+### 4- Exclusão incial
+
+### 5- Exclusão incial
 
 
 

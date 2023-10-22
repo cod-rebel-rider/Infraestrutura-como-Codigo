@@ -227,9 +227,31 @@ for sec_user in "${sec_users[@]}"; do
 done
 ```
 
-### 5- 
+### 5- Extra
 
+Para facilitar optei por criar arquivo com usuários e senhas onde um compando vai ler e configura a senha a seu respectivo usuário. O objetivo disso é apenas para logar nos usuários e testar se as permissões foram feitas com sucesso.
 
+senhas.txt
+```
+carlos:adm123
+maria:adm123
+joao:adm123
+debora:ven123
+sebastiana:ven123
+roberto:ven123
+josefina:sec123
+amanda:sec123
+rogerio:sec123
+```
+
+Comando para configurar as senhas:
+```
+sudo chpasswd < /home/matheus/senhas.txt
+```
+
+## Conclusão
+
+Esse é meu primeiro script de IaC e agora que estou escrevendo essa revisão percebi que existem muitas melhorias que eu posso fazer para otimiza-lo. Desde já agradeco pelo seu interesse em ler até aqui, não esqueca de deixar sua estrelinha no meu repositório e de me seguir no GitHub e nas minhas outras redes sociais.
 
 ## Sobre o Bootcamp
 ![Formação Linux Fundamentals](https://hermes.dio.me/tracks/cover/5182e012-d0f3-42b5-aec1-600b8653f498.png)

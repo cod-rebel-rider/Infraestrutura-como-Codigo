@@ -150,6 +150,12 @@ else
     else
       echo "Falha ao criar GRP_ADM: $result "
     fi
+    result=$(chown :GRP_ADM /home/adm 2>&1)
+    if [ $? -eq 0 ]; then
+      echo "Grupo GRP_ADM foi vinculado ao diretório /adm com sucesso."
+    else
+      echo "Falha ao vicular GRP_ADM a um diretório: $result "
+    fi
 fi
 
 #2º Grupo
@@ -164,6 +170,12 @@ else
     else
       echo "Falha ao criar GRP_VEN: $result "
     fi
+    result=$(chown :GRP_VEN /home/ven 2>&1)
+    if [ $? -eq 0 ]; then
+      echo "Grupo GRP_VEN foi vinculado ao diretório /ven com sucesso."
+    else
+      echo "Falha ao vicular GRP_VEN a um diretório: $result "
+    fi
 fi
 
 #3º Grupo
@@ -177,6 +189,12 @@ else
       echo "Grupo GRP_SEC foi criado com sucesso."
     else
       echo "Falha ao criar GRP_SEC: $result "
+    fi
+    result=$(chown :GRP_SEC /home/sec 2>&1)
+    if [ $? -eq 0 ]; then
+      echo "Grupo GRP_SEC foi vinculado ao diretório /sec com sucesso."
+    else
+      echo "Falha ao vicular GRP_SEC a um diretório: $result "
     fi
 fi
 

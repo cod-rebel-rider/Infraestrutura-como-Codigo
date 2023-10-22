@@ -1,0 +1,9 @@
+carlos:adm123
+maria:adm123
+joao:adm123
+debora:ven123
+sebastiana:ven123
+roberto:ven123
+josefina:sec123
+amanda:sec123
+rogerio:sec123

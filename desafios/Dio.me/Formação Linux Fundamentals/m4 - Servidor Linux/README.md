@@ -18,7 +18,7 @@ Este script contém comandos simples que são comuns para administradores de sis
 
 ### 1- Atualização do Sistema:
 
-A atualização do sistema é feita usando __apt update__ e __apt upgrade__. No início, usamos `sudo` para garantir privilégios de __superadministrador__. O argumento __-y__ indica que o script deve responder __"sim"__ automaticamente para qualquer pergunta feita durante o processo de atualização.
+A atualização do sistema é feita usando `apt update` e `apt upgrade`. No início, usamos `sudo` para garantir privilégios de __superadministrador__. O argumento `-y` indica que o script deve responder __"sim"__ automaticamente para qualquer pergunta feita durante o processo de atualização.
 
 ```
 #Update
@@ -42,9 +42,9 @@ echo "Atalização concluida!"
 
 Três pacotes são fundamentais para a conclusão do objetivo deste script: __apache2__, __unzip__ e __wget__. O __wget__ é geralmente um pacote padrão na maioria das distribuições Linux. No entanto, é feita uma verificação para garantir que ele esteja presente, assim como os outros pacotes.
 
-Utilizamos um __array__ chamado __pacotes__, que contém os nomes dos pacotes a serem instalados. Em seguida, usamos um loop __for__ para percorrer esse array e verificar se cada pacote está instalado usando o comando __dpkg -l__.
+Utilizamos um __array__ chamado __pacotes__, que contém os nomes dos pacotes a serem instalados. Em seguida, usamos um loop `for` para percorrer esse array e verificar se cada pacote está instalado usando o comando `dpkg -l`.
 
-Se um pacote não estiver instalado, ele é instalado usando __sudo apt install__. Caso contrário, o script informa que o pacote já está instalado.
+Se um pacote não estiver instalado, ele é instalado usando `sudo apt install`. Caso contrário, o script informa que o pacote já está instalado.
 
 ```
 pacotes=("apache2" "unzip" "wget")
@@ -71,9 +71,9 @@ done
 
 O script verifica se um arquivo chamado __"main.zip"__ já existe no diretório __/tmp__. Se existir, informa que o arquivo já está lá.
 
-Se o arquivo não existir, ele usa o comando __sudo wget__ para baixar um arquivo __ZIP__ de uma __URL__ da web e salvá-lo em __/tmp__.
+Se o arquivo não existir, ele usa o comando `sudo wget` para baixar um arquivo __ZIP__ de uma __URL__ da web e salvá-lo em __/tmp__.
 
-Em seguida, o comando __sudo unzip__ é usado para descompactar o arquivo ZIP baixado no diretório __/var/www/__.
+Em seguida, o comando `sudo unzip` é usado para descompactar o arquivo ZIP baixado no diretório __/var/www/__.
 
 O diretório __/var/www/html__ é excluído, se existir. O diretório descompactado é então renomeado para __/var/www/html__.
 

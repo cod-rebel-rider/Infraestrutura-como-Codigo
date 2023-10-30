@@ -14,15 +14,75 @@
 
 ## Explicando Meu Código
 
+Este script contém comandos simples que são comuns para administradores de sistemas Linux no dia a dia.
+
+### 1- Atualização do Sistema:
+
+A atualização do sistema é feita usando __apt update__ e __apt upgrade__. No início, usamos `sudo` para garantir privilégios de __superadministrador__. O argumento __-y__ indica que o script deve responder __"sim"__ automaticamente para qualquer pergunta feita durante o processo de atualização.
+
 ```
-EM CONSTRUÇÃO
+#Update
+echo "Verificando atualizações..."
+echo ""
+sudo apt update
+echo ""
+echo "Verificação concluida!"
 ```
+
+```
+#Upgrade
+echo "Atualizando Sistema"
+echo ""
+sudo apt upgrade -y
+echo ""
+echo "Atalização concluida!"
+```
+
+### 2- Instalação de Pacotes
+
+Três pacotes são fundamentais para a conclusão do objetivo deste script: __apache2__, __unzip__ e __wget__. O __wget__ é geralmente um pacote padrão na maioria das distribuições Linux. No entanto, é feita uma verificação para garantir que ele esteja presente, assim como os outros pacotes.
+
+Utilizamos um __array__ chamado __pacotes__, que contém os nomes dos pacotes a serem instalados. Em seguida, usamos um loop __for__ para percorrer esse array e verificar se cada pacote está instalado usando o comando __dpkg -l__.
+
+Se um pacote não estiver instalado, ele é instalado usando __sudo apt install__. Caso contrário, o script informa que o pacote já está instalado.
+
+```
+pacotes=("apache2" "unzip" "wget")
+
+echo "Instalando pacotes necessários...."
+
+for pacote in "${pacotes[@]}"; do
+    if dpkg -l | grep -q $pacote; then
+        echo ""
+        echo "$pacote já está instalado."
+        echo ""
+    else
+        echo ""
+        echo "$pacote não foi encontrado e precisa ser instalado."
+        echo "Iniciando instalação..."
+        echo ""
+        sudo apt install $pacote -y
+    fi
+    echo ""
+done
+```
+
+### 3- Baixar e Descompactar Arquivos:
+
+O script verifica se um arquivo chamado __"main.zip"__ já existe no diretório __/tmp__. Se existir, informa que o arquivo já está lá.
+
+Se o arquivo não existir, ele usa o comando __sudo wget__ para baixar um arquivo __ZIP__ de uma __URL__ da web e salvá-lo em __/tmp__.
+
+Em seguida, o comando __sudo unzip__ é usado para descompactar o arquivo ZIP baixado no diretório __/var/www/__.
+
+O diretório __/var/www/html__ é excluído, se existir. O diretório descompactado é então renomeado para __/var/www/html__.
 
 ## Conclusão
 
-```
-EM CONSTRUÇÃO
-```
+Esse código foi concluído com sucesso e é menos desafiador do que o desafio anterior (__m2__). Para tarefas comuns, existem muitas ferramentas de __código aberto__ disponíveis na Internet, como __Ansible__ e __Jenkins__, que podem automatizar a configuração do __ambiente web__ e a __implantação de aplicativos__. Portanto, a necessidade de escrever um __script__ para isso é quase nula, __a menos que seja para um cenário muito específico__ ou para fins de laboratório, como este teste.
+
+Agradeço pelo interesse em ler até aqui. Não se esqueça de deixar uma __estrela__ no meu __repositório__ e me seguir no __GitHub__ e nas minhas outras __redes sociais__.
+
 
 ## Sobre o Bootcamp
 ![Formação Linux Fundamentals](https://hermes.dio.me/tracks/cover/5182e012-d0f3-42b5-aec1-600b8653f498.png)

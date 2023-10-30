@@ -77,6 +77,26 @@ Em seguida, o comando `sudo unzip` é usado para descompactar o arquivo ZIP baix
 
 O diretório __/var/www/html__ é excluído, se existir. O diretório descompactado é então renomeado para __/var/www/html__.
 
+```
+echo "Baixando arquivos para pasta temporária..."
+echo ""
+
+if [[ -e "/tmp/main.zip" ]]; then
+  echo "O arquivo main.zip já existe!"
+else
+  echo "Iniciando wget..."
+  sudo wget -P /tmp https://github.com/denilsonbonatti/linux-site-dio/archive/refs/heads/main.zip
+fi
+
+echo ""
+echo "Descompactando arquivos..."
+echo ""
+sudo unzip /tmp/main.zip -d /var/www/
+sudo rm -rf /var/www/html
+sudo mv /var/www/linux-site-dio-main/ /var/www/html
+```
+
+
 ## Conclusão
 
 Esse código foi concluído com sucesso e é menos desafiador do que o desafio anterior (__m2__). Para tarefas comuns, existem muitas ferramentas de __código aberto__ disponíveis na Internet, como __Ansible__ e __Jenkins__, que podem automatizar a configuração do __ambiente web__ e a __implantação de aplicativos__. Portanto, a necessidade de escrever um __script__ para isso é quase nula, __a menos que seja para um cenário muito específico__ ou para fins de laboratório, como este teste.

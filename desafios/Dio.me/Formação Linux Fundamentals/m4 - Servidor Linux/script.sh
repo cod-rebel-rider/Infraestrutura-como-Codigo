@@ -46,3 +46,28 @@ for pacote in "${pacotes[@]}"; do
     echo ""
 done
 
+#Baixando e descompactando arquivos
+
+echo ""
+echo "========================================"
+echo ""
+echo "Baixando arquivos para pasta temporária..."
+echo ""
+
+if [[ -e "/tmp/main.zip" ]]; then
+  echo "O arquivo main.zip já existe!"
+else
+  echo "Iniciando wget..."
+  sudo wget -P /tmp https://github.com/denilsonbonatti/linux-site-dio/archive/refs/heads/main.zip
+fi
+
+echo ""
+echo "Descompactando arquivos..."
+echo ""
+sudo unzip /tmp/main.zip -d /var/www/
+sudo rm -rf /var/www/html
+sudo mv /var/www/linux-site-dio-main/ /var/www/html
+
+echo ""
+echo "========================================"
+echo ""
